@@ -1,51 +1,40 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "@/components/Dashboard";
+import Patients from "@/components/Patients";
+import Doctors from "@/components/Doctors";
+import Staff from "@/components/Staff";
+import Appointments from "@/components/Appointments";
+import MedicalRecords from "@/components/MedicalRecords";
+import Billing from "@/components/Billing";
+import Inventory from "@/components/Inventory";
+import Sidebar from "@/components/Sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
+  const [activeView, setActiveView] = useState("dashboard");
+
   return (
     <div className="App">
+      <Toaster position="top-right" richColors />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
+        <div className="flex min-h-screen">
+          <Sidebar activeView={activeView} setActiveView={setActiveView} />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/patients" element={<Patients />} />
+              <Route path="/doctors" element={<Doctors />} />
+              <Route path="/staff" element={<Staff />} />
+              <Route path="/appointments" element={<Appointments />} />
+              <Route path="/medical-records" element={<MedicalRecords />} />
+              <Route path="/billing" element={<Billing />} />
+              <Route path="/inventory" element={<Inventory />} />
+            </Routes>
+          </main>
+        </div>
       </BrowserRouter>
     </div>
   );
